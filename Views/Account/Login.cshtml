@@ -1,0 +1,47 @@
+﻿@model PlataformaMunicipal.ViewModels.LoginViewModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Iniciar sesión</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <style>
+        body { background: #F4F7FA; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .login-card { width: 100%; max-width: 400px; border: 0; border-radius: 12px; box-shadow: 0 4px 20px rgba(44,95,124,.15); }
+        .login-header { background: #2C5F7C; color: #fff; border-radius: 12px 12px 0 0; padding: 1.5rem; text-align: center; }
+        .btn-primary { background: #2C5F7C; border-color: #2C5F7C; }
+        .btn-primary:hover { background: #244d65; border-color: #244d65; }
+    </style>
+</head>
+<body>
+    <div class="card login-card">
+        <div class="login-header">
+            <i class="bi bi-building fs-1"></i>
+            <h4 class="mt-2 mb-0">Plataforma Municipal</h4>
+            <small>Gestión de servicios ciudadanos</small>
+        </div>
+        <div class="card-body p-4">
+            <form asp-action="Login" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2"></div>
+                <div class="mb-3">
+                    <label asp-for="Usuario" class="form-label"></label>
+                    <input asp-for="Usuario" class="form-control" autofocus />
+                    <span asp-validation-for="Usuario" class="text-danger small"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Contrasena" class="form-label"></label>
+                    <input asp-for="Contrasena" class="form-control" />
+                    <span asp-validation-for="Contrasena" class="text-danger small"></span>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Ingresar</button>
+            </form>
+        </div>
+    </div>
+    <partial name="_ValidationScriptsPartial" />
+</body>
+</html>
