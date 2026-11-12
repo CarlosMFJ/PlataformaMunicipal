@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using PlataformaMunicipal.Models;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PlataformaMunicipal.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         public IActionResult Index()
