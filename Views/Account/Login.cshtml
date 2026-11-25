@@ -26,16 +26,16 @@
             <small>Gestión de servicios ciudadanos</small>
         </div>
         <div class="card-body p-4">
-            <form asp-action="Login" method="post">
+            <form asp-action="Login" method="post" autocomplete="off">
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2"></div>
                 <div class="mb-3">
                     <label asp-for="Usuario" class="form-label"></label>
-                    <input asp-for="Usuario" class="form-control" autofocus />
+                    <input asp-for="Usuario" class="form-control" autocomplete="off" autofocus />
                     <span asp-validation-for="Usuario" class="text-danger small"></span>
                 </div>
                 <div class="mb-3">
                     <label asp-for="Contrasena" class="form-label"></label>
-                    <input asp-for="Contrasena" class="form-control" />
+                    <input asp-for="Contrasena" class="form-control" autocomplete="new-password" value="" />
                     <span asp-validation-for="Contrasena" class="text-danger small"></span>
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Ingresar</button>

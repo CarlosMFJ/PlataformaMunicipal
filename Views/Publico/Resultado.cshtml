@@ -1,0 +1,53 @@
+﻿@model PlataformaMunicipal.Models.SolicitudCiudadana
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Resultado de consulta</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        body {
+            background: #F4F7FA;
+        }
+
+        .btn-primary {
+            background: #2C5F7C;
+            border-color: #2C5F7C;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5" style="max-width:600px">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                @if (Model == null)
+                {
+                    <h5 class="text-danger">No se encontró la solicitud</h5>
+                    <p class="text-muted">Verifique que el número y la cédula sean correctos.</p>
+                }
+                else
+                {
+                    <h5>Solicitud @Model.NumeroSolicitud</h5>
+                    <hr />
+                    <p><strong>Servicio:</strong> @Model.Servicio.Nombre</p>
+                    <p><strong>Asunto:</strong> @Model.Asunto</p>
+                    <p><strong>Fecha:</strong> @Model.FechaSolicitud.ToString("dd/MM/yyyy")</p>
+                    <p>
+                        <strong>Estado:</strong>
+                        <span class="badge" style="background-color:@Model.Estado.Color">@Model.Estado.Nombre</span>
+                    </p>
+                    @if (Model.FechaLimite != null)
+                    {
+                        <p><strong>Fecha estimada:</strong> @Model.FechaLimite.Value.ToString("dd/MM/yyyy")</p>
+                    }
+                }
+                <a asp-action="Index" class="btn btn-primary mt-2">Volver</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

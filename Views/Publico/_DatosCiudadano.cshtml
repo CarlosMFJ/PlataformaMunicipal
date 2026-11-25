@@ -1,0 +1,39 @@
+﻿@model PlataformaMunicipal.ViewModels.CiudadanoFormBase
+
+<h6 class="text-primary">Sus datos</h6>
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <label asp-for="Cedula" class="form-label"></label>
+        <input asp-for="Cedula" id="cedula" class="form-control" maxlength="13"
+               inputmode="numeric" placeholder="000-0000000-0" />
+        <span asp-validation-for="Cedula" class="text-danger small"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="Nombres" class="form-label"></label>
+        <input asp-for="Nombres" class="form-control solo-letras" maxlength="80" />
+        <span asp-validation-for="Nombres" class="text-danger small"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="Apellidos" class="form-label"></label>
+        <input asp-for="Apellidos" class="form-control solo-letras" maxlength="80" />
+        <span asp-validation-for="Apellidos" class="text-danger small"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="Telefono" class="form-label"></label>
+        <input asp-for="Telefono" id="telefono" class="form-control" maxlength="12"
+               inputmode="numeric" placeholder="809-000-0000" />
+        <span asp-validation-for="Telefono" class="text-danger small"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="Correo" class="form-label">Correo (opcional)</label>
+        <input asp-for="Correo" type="email" class="form-control" maxlength="120" />
+        <span asp-validation-for="Correo" class="text-danger small"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="SectorId" class="form-label">Sector (opcional)</label>
+        <select asp-for="SectorId" asp-items="ViewBag.Sectores" class="form-select">
+            <option value="">— Seleccione —</option>
+        </select>
+        <span asp-validation-for="SectorId" class="text-danger small"></span>
+    </div>
+</div>

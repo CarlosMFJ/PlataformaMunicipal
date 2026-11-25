@@ -1,0 +1,26 @@
+﻿<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+<script>
+    function soloDigitos(v, max) { return v.replace(/\D/g, '').substring(0, max); }
+    function formatoCedula(v) {
+        v = soloDigitos(v, 11);
+        if (v.length > 10) return v.substring(0, 3) + '-' + v.substring(3, 10) + '-' + v.substring(10);
+        if (v.length > 3) return v.substring(0, 3) + '-' + v.substring(3);
+        return v;
+    }
+    function formatoTelefono(v) {
+        v = soloDigitos(v, 10);
+        if (v.length > 6) return v.substring(0, 3) + '-' + v.substring(3, 6) + '-' + v.substring(6);
+        if (v.length > 3) return v.substring(0, 3) + '-' + v.substring(3);
+        return v;
+    }
+    $('#cedula').on('input', function () { this.value = formatoCedula(this.value); });
+    $('#telefono').on('input', function () { this.value = formatoTelefono(this.value); });
+    $('.solo-letras').on('input', function () {
+        this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s'\-]/g, '');
+    });
+    $('#descripcion').on('input', function () { $('#contador').text(this.value.length); }).trigger('input');
+    $('#cedula').val(formatoCedula($('#cedula').val()));
+    $('#telefono').val(formatoTelefono($('#telefono').val()));
+</script>

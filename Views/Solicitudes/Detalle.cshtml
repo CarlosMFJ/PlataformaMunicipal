@@ -1,0 +1,111 @@
+﻿@model PlataformaMunicipal.ViewModels.SolicitudDetalleViewModel
+@{
+    var s = Model.Solicitud;
+    ViewData["Title"] = "Solicitud " + s.NumeroSolicitud;
+    var cerrada = s.Estado.EsFinal;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0">
+        @s.NumeroSolicitud
+        <span class="badge ms-2" style="background-color:@s.Estado.Color">@s.Estado.Nombre</span>
+    </h4>
+    <div class="d-flex gap-2">
+        <a asp-action="Index" class="btn btn-light">Volver</a>
+        @if (!cerrada && Model.PuedeAsignar)
+        {
+            <button class="btn btn-primary btn-modal" data-url="@Url.Action("Derivar", new { id = s.SolicitudId })">
+                <i class="bi bi-arrow-right-circle"></i> Derivar
+            </button>
+        }
+        @if (!cerrada)
+        {
+            <button class="btn btn-outline-primary btn-modal" data-url="@Url.Action("Estado", new { id = s.SolicitudId })">
+                <i class="bi bi-flag"></i> Cambiar estado
+            </button>
+        }
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-8">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5>@s.Asunto</h5>
+                <p class="text-muted mb-3">@s.Descripcion</p>
+                <div class="row small">
+                    <div class="col-md-6 mb-2"><strong>Servicio:</strong> @s.Servicio.Nombre</div>
+                    <div class="col-md-6 mb-2"><strong>Departamento del servicio:</strong> @s.Servicio.Departamento?.Nombre</div>
+                    <div class="col-md-6 mb-2"><strong>Prioridad:</strong> @(s.Prioridad == 1 ? "Alta" : s.Prioridad == 2 ? "Media" : "Baja")</div>
+                    <div class="col-md-6 mb-2"><strong>Canal:</strong> @s.Canal</div>
+                    <div class="col-md-6 mb-2"><strong>Fecha:</strong> @s.FechaSolicitud.ToString("dd/MM/yyyy HH:mm")</div>
+                    <div class="col-md-6 mb-2"><strong>Fecha límite:</strong> @(s.FechaLimite?.ToString("dd/MM/yyyy") ?? "—")</div>
+                    <div class="col-md-6 mb-2"><strong>Resolución:</strong> @(s.FechaResolucion?.ToString("dd/MM/yyyy HH:mm") ?? "—")</div>
+                    <div class="col-md-6 mb-2"><strong>Dirección del incidente:</strong> @(s.DireccionIncidente ?? "—")</div>
+                    <div class="col-12"><strong>Observaciones:</strong> @(s.Observaciones ?? "—")</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h6 class="mb-3">Historial de asignaciones</h6>
+                @if (!Model.Historial.Any())
+                {
+                    <p class="text-muted mb-0">Aún no ha sido derivada.</p>
+                }
+                else
+                {
+                    <table class="table table-sm align-middle mb-0">
+                        <thead><tr><th>Fecha</th><th>Departamento</th><th>Empleado</th><th>Asignó</th><th>Comentario</th><th></th></tr></thead>
+                        <tbody>
+                            @foreach (var a in Model.Historial)
+                            {
+                                <tr>
+                                    <td>@a.FechaAsignacion.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>@a.Departamento?.Nombre</td>
+                                    <td>@(a.Empleado != null ? a.Empleado.Nombres + " " + a.Empleado.Apellidos : "—")</td>
+                                    <td>@a.AsignadoPorUsuario?.NombreUsuario</td>
+                                    <td>@a.Comentario</td>
+                                    <td>@if (a.EsActual) {
+                                        <span class="badge bg-success">Vigente</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-4">
+    <div class="card mb-3">
+        <div class="card-body">
+            <h6>Ciudadano</h6>
+            <p class="mb-1">@s.Ciudadano.Nombres @s.Ciudadano.Apellidos</p>
+            <p class="mb-1 small text-muted">Cédula: @s.Ciudadano.Cedula</p>
+            <p class="mb-1 small text-muted">Tel.: @s.Ciudadano.Telefono</p>
+            <p class="mb-1 small text-muted">Correo: @(s.Ciudadano.Correo ?? "—")</p>
+            <p class="mb-0 small text-muted">Sector: @(s.Ciudadano.Sector?.Nombre ?? "—")</p>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <h6>Asignación vigente</h6>
+            @if (Model.Actual == null)
+            {
+                <p class="text-muted mb-0">Sin asignar.</p>
+            }
+            else
+            {
+                <p class="mb-1"><strong>@Model.Actual.Departamento?.Nombre</strong></p>
+                <p class="mb-0 small text-muted">
+                    Responsable: @(Model.Actual.Empleado != null ? Model.Actual.Empleado.Nombres + " " + Model.Actual.Empleado.Apellidos : "Pendiente de asignar")
+                </p>
+            }
+        </div>
+    </div>
+</div>
+</div>

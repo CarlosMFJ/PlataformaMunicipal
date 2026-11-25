@@ -58,6 +58,11 @@ public partial class SolicitudCiudadana
     [StringLength(500)]
     public string Observaciones { get; set; }
 
+    [Required]
+    [StringLength(10)]
+    [Unicode(false)]
+    public string Tipo { get; set; }
+
     [InverseProperty("Solicitud")]
     public virtual AsignacionSolicitud AsignacionSolicitud { get; set; }
 

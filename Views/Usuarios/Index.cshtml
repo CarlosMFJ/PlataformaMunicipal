@@ -1,0 +1,82 @@
+﻿@model IEnumerable<PlataformaMunicipal.Models.Usuario>
+@{
+    ViewData["Title"] = "Usuarios";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0">Usuarios</h4>
+    <button class="btn btn-primary btn-modal" data-url="@Url.Action("Crear")">
+        <i class="bi bi-plus-lg"></i> Nuevo
+    </button>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <table id="tabla" class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Correo</th>
+                    <th>Rol</th>
+                    <th>Pertenece a</th>
+                    <th>Último acceso</th>
+                    <th>Estado</th>
+                    <th class="text-end">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var u in Model)
+                {
+                    <tr>
+                        <td>@u.NombreUsuario</td>
+                        <td>@u.Correo</td>
+                        <td>@u.Rol?.Nombre</td>
+                        <td>
+                            @if (u.Empleado != null)
+                            {
+                                <span>Empleado: @u.Empleado.Nombres @u.Empleado.Apellidos</span>
+                            }
+                            else if (u.Ciudadano != null)
+                            {
+
+                                <span>Ciudadano: @u.Ciudadano.Nombres @u.Ciudadano.Apellidos</span>
+                            }
+                        </td>
+                        <td>@(u.UltimoAcceso?.ToString("dd/MM/yyyy HH:mm") ?? "—")</td>
+                        <td>
+                            @if (u.Bloqueado)
+                            {
+                                <span class="badge bg-danger">Bloqueado</span>
+                            }
+                            else if (u.Activo)
+                            {
+
+                                <span class="badge bg-success">Activo</span>
+                            }
+                            else
+                            {
+
+                                <span class="badge bg-secondary">Inactivo</span>
+                            }
+                        </td>
+                        <td class="text-end">
+                            <button class="btn btn-sm btn-outline-secondary btn-modal" data-url="@Url.Action("Editar", new { id = u.UsuarioId })">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            @if (u.Activo)
+                            {
+                                <button class="btn btn-sm btn-outline-danger btn-eliminar" data-url="@Url.Action("Eliminar", new { id = u.UsuarioId })">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_DataTablesScripts" />
+}

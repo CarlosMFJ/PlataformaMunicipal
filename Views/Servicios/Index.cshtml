@@ -1,0 +1,73 @@
+﻿@model IEnumerable<PlataformaMunicipal.Models.ServicioMunicipal>
+@{
+    ViewData["Title"] = "Servicios";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0">Servicios municipales</h4>
+    @if (!User.IsInRole("Operador"))
+    {
+        <button class="btn btn-primary btn-modal" data-url="@Url.Action("Crear")">
+            <i class="bi bi-plus-lg"></i> Nuevo
+        </button>
+    }
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <table id="tabla" class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Nombre</th>
+                    <th>Departamento</th>
+                    <th>Costo</th>
+                    <th>Días</th>
+                    <th>Estado</th>
+                    <th class="text-end">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var s in Model)
+                {
+                    <tr>
+                        <td>@s.Codigo</td>
+                        <td>@s.Nombre</td>
+                        <td>@s.Departamento?.Nombre</td>
+                        <td>@(s.Costo == 0 ? "Gratuito" : "RD$ " + s.Costo.ToString("N2"))</td>
+                        <td>@s.TiempoEstimadoDias</td>
+                        <td>
+                            @if (s.Activo)
+                            {
+                                <span class="badge bg-success">Activo</span>
+                            }
+                            else
+                            {
+
+                                <span class="badge bg-secondary">Inactivo</span>
+                            }
+                        </td>
+                        <td class="text-end">
+                            @if (!User.IsInRole("Operador"))
+                            {
+                                <button class="btn btn-sm btn-outline-secondary btn-modal" data-url="@Url.Action("Editar", new { id = s.ServicioId })">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                @if (s.Activo)
+                                {
+                                    <button class="btn btn-sm btn-outline-danger btn-eliminar" data-url="@Url.Action("Eliminar", new { id = s.ServicioId })">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_DataTablesScripts" />
+}

@@ -1,0 +1,89 @@
+﻿@model IEnumerable<PlataformaMunicipal.Models.SolicitudCiudadana>
+@{
+    ViewData["Title"] = "Solicitudes";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0">Solicitudes y quejas</h4>
+    <button class="btn btn-primary btn-modal" data-url="@Url.Action("Crear")">
+        <i class="bi bi-plus-lg"></i> Nueva
+    </button>
+</div>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <form method="get" class="row g-2">
+            <div class="col-md-4">
+                <input name="q" value="@ViewBag.Q" class="form-control" placeholder="Número, cédula o asunto" />
+            </div>
+            <div class="col-md-3">
+                <select name="estadoId" asp-items="ViewBag.Estados" class="form-select">
+                    <option value="">Todos los estados</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select name="departamentoId" asp-items="ViewBag.Departamentos" class="form-select">
+                    <option value="">Todos los departamentos</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-flex gap-1">
+                <button class="btn btn-primary flex-fill"><i class="bi bi-search"></i></button>
+                <a asp-action="Index" class="btn btn-light flex-fill"><i class="bi bi-x-lg"></i></a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <table id="tabla" class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Número</th>
+                    <th>Fecha</th>
+                    <th>Ciudadano</th>
+                    <th>Servicio</th>
+                    <th>Asunto</th>
+                    <th>Prioridad</th>
+                    <th>Canal</th>
+                    <th>Estado</th>
+                    <th class="text-end">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var s in Model)
+                {
+                    var vencida = s.FechaLimite < DateTime.Now && s.FechaResolucion == null && !s.Estado.EsFinal;
+                    <tr>
+                        <td>
+                            <a asp-action="Detalle" asp-route-id="@s.SolicitudId">@s.NumeroSolicitud</a>
+                            @if (vencida)
+                            {
+                                <span class="badge bg-danger ms-1">Vencida</span>
+                            }
+                        </td>
+                        <td data-order="@s.FechaSolicitud.ToString("yyyyMMddHHmm")">@s.FechaSolicitud.ToString("dd/MM/yyyy")</td>
+                        <td>@s.Ciudadano?.Nombres @s.Ciudadano?.Apellidos</td>
+                        <td>@s.Servicio?.Nombre</td>
+                        <td>@s.Asunto</td>
+                        <td>@(s.Prioridad == 1 ? "Alta" : s.Prioridad == 2 ? "Media" : "Baja")</td>
+                        <td>@s.Canal</td>
+                        <td><span class="badge" style="background-color:@s.Estado?.Color">@s.Estado?.Nombre</span></td>
+                        <td class="text-end">
+                            <a class="btn btn-sm btn-outline-primary" title="Ver detalle"
+                               asp-action="Detalle" asp-route-id="@s.SolicitudId"><i class="bi bi-eye"></i></a>
+                            <button class="btn btn-sm btn-outline-secondary btn-modal" title="Editar"
+                                    data-url="@Url.Action("Editar", new { id = s.SolicitudId })">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_DataTablesScripts" />
+}

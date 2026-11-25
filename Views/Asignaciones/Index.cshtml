@@ -1,0 +1,64 @@
+﻿@model IEnumerable<PlataformaMunicipal.Models.AsignacionSolicitud>
+@{
+    ViewData["Title"] = "Asignaciones";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0">Asignaciones de solicitudes</h4>
+    <button class="btn btn-primary btn-modal" data-url="@Url.Action("Crear")">
+        <i class="bi bi-plus-lg"></i> Nueva
+    </button>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <table id="tabla" class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Solicitud</th>
+                    <th>Departamento</th>
+                    <th>Empleado</th>
+                    <th>Asignó</th>
+                    <th>Vigente</th>
+                    <th class="text-end">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var a in Model)
+                {
+                    <tr>
+                        <td data-order="@a.FechaAsignacion.ToString("yyyyMMddHHmm")">@a.FechaAsignacion.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@a.Solicitud?.NumeroSolicitud</td>
+                        <td>@a.Departamento?.Nombre</td>
+                        <td>@(a.Empleado != null ? a.Empleado.Nombres + " " + a.Empleado.Apellidos : "—")</td>
+                        <td>@a.AsignadoPorUsuario?.NombreUsuario</td>
+                        <td>
+                            @if (a.EsActual)
+                            {
+                                <span class="badge bg-success">Sí</span>
+                            }
+                            else
+                            {
+
+                                <span class="badge bg-secondary">No</span>
+                            }
+                        </td>
+                        <td class="text-end">
+                            <button class="btn btn-sm btn-outline-secondary btn-modal" data-url="@Url.Action("Editar", new { id = a.AsignacionId })">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger btn-eliminar" data-url="@Url.Action("Eliminar", new { id = a.AsignacionId })">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_DataTablesScripts" />
+}

@@ -1,0 +1,102 @@
+﻿@model PlataformaMunicipal.Models.Ciudadano
+
+<form asp-action="@(Model.CiudadanoId == 0 ? "Crear" : "Editar")" method="post" autocomplete="off">
+    <div class="modal-header">
+        <h5 class="modal-title">@(Model.CiudadanoId == 0 ? "Nuevo ciudadano" : "Editar ciudadano")</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    </div>
+    <div class="modal-body">
+        <input type="hidden" asp-for="CiudadanoId" />
+        <input type="hidden" asp-for="FechaRegistro" />
+        <input type="hidden" asp-for="Municipio" />
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2"></div>
+
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label asp-for="Cedula" class="form-label">Cédula</label>
+                <input asp-for="Cedula" class="form-control mask-cedula" maxlength="13"
+                       inputmode="numeric" placeholder="000-0000000-0" />
+                <span asp-validation-for="Cedula" class="text-danger small"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Nombres" class="form-label">Nombres</label>
+                <input asp-for="Nombres" class="form-control solo-letras" maxlength="80" />
+                <span asp-validation-for="Nombres" class="text-danger small"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Apellidos" class="form-label">Apellidos</label>
+                <input asp-for="Apellidos" class="form-control solo-letras" maxlength="80" />
+                <span asp-validation-for="Apellidos" class="text-danger small"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="FechaNacimiento" class="form-label">Fecha de nacimiento</label>
+                <input asp-for="FechaNacimiento" type="date" class="form-control" />
+                <span asp-validation-for="FechaNacimiento" class="text-danger small"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Sexo" class="form-label">Sexo</label>
+                <select asp-for="Sexo" asp-items="ViewBag.Sexos" class="form-select">
+                    <option value="">— Seleccione —</option>
+                </select>
+                <span asp-validation-for="Sexo" class="text-danger small"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Telefono" class="form-label">Teléfono</label>
+                <input asp-for="Telefono" class="form-control mask-telefono" maxlength="12"
+                       inputmode="numeric" placeholder="809-000-0000" />
+                <span asp-validation-for="Telefono" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Correo" class="form-label">Correo</label>
+                <input asp-for="Correo" type="email" class="form-control" maxlength="120" />
+                <span asp-validation-for="Correo" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="SectorId" class="form-label">Sector</label>
+                <select asp-for="SectorId" asp-items="ViewBag.Sectores" class="form-select">
+                    <option value="">— Seleccione —</option>
+                </select>
+                <span asp-validation-for="SectorId" class="text-danger small"></span>
+            </div>
+            <div class="col-md-9">
+                <label asp-for="Direccion" class="form-label">Dirección</label>
+                <input asp-for="Direccion" class="form-control" maxlength="250" />
+                <span asp-validation-for="Direccion" class="text-danger small"></span>
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <div class="form-check">
+                    <input asp-for="Activo" class="form-check-input" />
+                    <label asp-for="Activo" class="form-check-label">Activo</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </div>
+</form>
+
+<script>
+    (function () {
+        function dig(v, max) { return v.replace(/\D/g, '').substring(0, max); }
+        function fCed(v) {
+            v = dig(v, 11);
+            if (v.length > 10) return v.substring(0, 3) + '-' + v.substring(3, 10) + '-' + v.substring(10);
+            if (v.length > 3) return v.substring(0, 3) + '-' + v.substring(3);
+            return v;
+        }
+        function fTel(v) {
+            v = dig(v, 10);
+            if (v.length > 6) return v.substring(0, 3) + '-' + v.substring(3, 6) + '-' + v.substring(6);
+            if (v.length > 3) return v.substring(0, 3) + '-' + v.substring(3);
+            return v;
+        }
+        var $f = $('#modalContent');
+        $f.find('.mask-cedula').on('input', function () { this.value = fCed(this.value); }).trigger('input');
+        $f.find('.mask-telefono').on('input', function () { this.value = fTel(this.value); }).trigger('input');
+        $f.find('.solo-letras').on('input', function () {
+            this.value = this.value.replace(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s'\-]/g, '');
+        });
+    })();
+</script>

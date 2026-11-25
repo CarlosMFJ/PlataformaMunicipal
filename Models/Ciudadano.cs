@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace PlataformaMunicipal.Models;
 
 [Table("Ciudadano")]
+[Index("SectorId", Name = "IX_Ciudadano_Sector")]
 [Index("Cedula", Name = "UQ_Ciudadano_Cedula", IsUnique = true)]
 public partial class Ciudadano
 {
@@ -44,15 +45,19 @@ public partial class Ciudadano
     public string Direccion { get; set; }
 
     [StringLength(100)]
-    public string Sector { get; set; }
-
-    [StringLength(100)]
     public string Municipio { get; set; }
 
     public bool Activo { get; set; }
 
     [Precision(0)]
     public DateTime FechaRegistro { get; set; }
+
+    [Column("SectorID")]
+    public int? SectorId { get; set; }
+
+    [ForeignKey("SectorId")]
+    [InverseProperty("Ciudadanos")]
+    public virtual Sector Sector { get; set; }
 
     [InverseProperty("Ciudadano")]
     public virtual ICollection<SolicitudCiudadana> SolicitudCiudadanas { get; set; } = new List<SolicitudCiudadana>();

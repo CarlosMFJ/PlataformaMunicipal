@@ -1,0 +1,50 @@
+﻿<form asp-action="Derivar" method="post">
+    <div class="modal-header">
+        <h5 class="modal-title">Derivar solicitud</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    </div>
+    <div class="modal-body">
+        <input type="hidden" name="solicitudId" value="@ViewBag.SolicitudId" />
+
+        <div class="mb-3">
+            <label class="form-label">Departamento responsable</label>
+            <select name="departamentoId" id="selDepto" asp-items="ViewBag.Departamentos" class="form-select" required>
+                <option value="">— Seleccione —</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Empleado (opcional)</label>
+            <select name="empleadoId" id="selEmp" class="form-select">
+                <option value="">— Asignar después —</option>
+                @foreach (var e in (List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>)ViewBag.Empleados)
+                {
+                    <option value="@e.Value" data-depto="@e.Group.Name">@e.Text</option>
+                }
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Comentario</label>
+            <textarea name="comentario" class="form-control" rows="3" maxlength="500"></textarea>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Derivar</button>
+    </div>
+</form>
+
+<script>
+    (function () {
+        var $d = $('#selDepto'), $e = $('#selEmp');
+        function filtrar() {
+            var d = $d.val();
+            $e.find('option[data-depto]').each(function () {
+                var ok = $(this).data('depto').toString() === d;
+                $(this).prop('hidden', !ok).prop('disabled', !ok);
+            });
+            $e.val('');
+        }
+        $d.on('change', filtrar);
+        filtrar();
+    })();
+</script>

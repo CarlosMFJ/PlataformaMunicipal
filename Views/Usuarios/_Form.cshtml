@@ -1,0 +1,74 @@
+﻿@model PlataformaMunicipal.ViewModels.UsuarioFormViewModel
+
+<form asp-action="@(Model.UsuarioId == 0 ? "Crear" : "Editar")" method="post" autocomplete="off">
+    <div class="modal-header">
+        <h5 class="modal-title">@(Model.UsuarioId == 0 ? "Nuevo usuario" : "Editar usuario")</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    </div>
+    <div class="modal-body">
+        <input type="hidden" asp-for="UsuarioId" />
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2"></div>
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label asp-for="NombreUsuario" class="form-label"></label>
+                <input asp-for="NombreUsuario" class="form-control" autocomplete="off" />
+                <span asp-validation-for="NombreUsuario" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Correo" class="form-label"></label>
+                <input asp-for="Correo" type="email" class="form-control" autocomplete="off" />
+                <span asp-validation-for="Correo" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="RolId" class="form-label"></label>
+                <select asp-for="RolId" asp-items="ViewBag.Roles" class="form-select">
+                    <option value="">— Seleccione —</option>
+                </select>
+                <span asp-validation-for="RolId" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Contrasena" class="form-label"></label>
+                <input asp-for="Contrasena" class="form-control" autocomplete="new-password" value="" />
+                @if (Model.UsuarioId != 0)
+                {
+                    <div class="form-text">Dejar vacío para no cambiarla.</div>
+                }
+                <span asp-validation-for="Contrasena" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="EmpleadoId" class="form-label"></label>
+                <select asp-for="EmpleadoId" asp-items="ViewBag.Empleados" class="form-select">
+                    <option value="">— Ninguno —</option>
+                </select>
+                <span asp-validation-for="EmpleadoId" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="CiudadanoId" class="form-label"></label>
+                <select asp-for="CiudadanoId" asp-items="ViewBag.Ciudadanos" class="form-select">
+                    <option value="">— Ninguno —</option>
+                </select>
+                <span asp-validation-for="CiudadanoId" class="text-danger small"></span>
+            </div>
+            <div class="col-12">
+                <div class="form-text mb-2">La cuenta pertenece a un empleado <strong>o</strong> a un ciudadano, no a ambos.</div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-check">
+                    <input asp-for="Activo" class="form-check-input" />
+                    <label asp-for="Activo" class="form-check-label">Activo</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-check">
+                    <input asp-for="Bloqueado" class="form-check-input" />
+                    <label asp-for="Bloqueado" class="form-check-label">Bloqueado</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </div>
+</form>

@@ -1,8 +1,107 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model PlataformaMunicipal.ViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="text-muted small">Total de solicitudes</div>
+                <div class="fs-2 fw-bold" style="color:#2C5F7C">@Model.Total</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="text-muted small">En proceso</div>
+                <div class="fs-2 fw-bold text-primary">@Model.EnProceso</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="text-muted small">Resueltas</div>
+                <div class="fs-2 fw-bold text-success">@Model.Resueltas</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="text-muted small">Vencidas</div>
+                <div class="fs-2 fw-bold text-danger">@Model.Vencidas</div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<div class="row g-3">
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h6>Solicitudes por estado</h6>
+                <canvas id="gEstado"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h6>Por departamento (asignación vigente)</h6>
+                <canvas id="gDepto"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h6>Por sector</h6>
+                <canvas id="gSector"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script>
+        var porEstado = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.PorEstado));
+        var porDepto  = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.PorDepartamento));
+        var porSector = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.PorSector));
+
+        var paleta = ['#2C5F7C', '#4E9F7D', '#E0A458', '#C4686B', '#7B7FB5', '#5FA8B8', '#9AA5B1'];
+
+        new Chart(document.getElementById('gEstado'), {
+            type: 'doughnut',
+            data: {
+                labels: porEstado.map(function (x) { return x.Etiqueta; }),
+                datasets: [{
+                    data: porEstado.map(function (x) { return x.Valor; }),
+                    backgroundColor: porEstado.map(function (x, i) { return x.Color || paleta[i % paleta.length]; })
+                }]
+            },
+            options: { plugins: { legend: { position: 'bottom' } } }
+        });
+
+        new Chart(document.getElementById('gDepto'), {
+            type: 'bar',
+            data: {
+                labels: porDepto.map(function (x) { return x.Etiqueta; }),
+                datasets: [{ label: 'Solicitudes', data: porDepto.map(function (x) { return x.Valor; }), backgroundColor: '#2C5F7C' }]
+            },
+            options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
+        });
+
+        new Chart(document.getElementById('gSector'), {
+            type: 'bar',
+            data: {
+                labels: porSector.map(function (x) { return x.Etiqueta; }),
+                datasets: [{ label: 'Solicitudes', data: porSector.map(function (x) { return x.Valor; }), backgroundColor: '#4E9F7D' }]
+            },
+            options: { indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, ticks: { precision: 0 } } } }
+        });
+    </script>
+}

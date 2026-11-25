@@ -1,0 +1,115 @@
+﻿@model PlataformaMunicipal.ViewModels.QuejaViewModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Presentar una queja</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <style>
+        body {
+            background: #F4F7FA;
+            color: #2B2B2B;
+        }
+
+        .nav-top {
+            background: #2C5F7C;
+        }
+
+        .card {
+            border: 1px solid #DDE4EA;
+            border-radius: 10px;
+        }
+
+        .cabecera {
+            border-left: 5px solid #E0A458;
+            padding-left: 1rem;
+        }
+
+        .btn-primary {
+            background: #2C5F7C;
+            border-color: #2C5F7C;
+        }
+
+            .btn-primary:hover {
+                background: #244d65;
+                border-color: #244d65;
+            }
+
+        .trampa {
+            position: absolute;
+            left: -9999px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-top navbar navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" asp-action="Index"><i class="bi bi-building"></i> Ayuntamiento</a>
+        </div>
+    </nav>
+
+    <div class="container py-4" style="max-width:800px">
+        <div class="card">
+            <div class="card-body p-4">
+                <div class="cabecera mb-4">
+                    <h4 class="mb-1"><i class="bi bi-exclamation-triangle text-warning"></i> Presentar una queja</h4>
+                    <p class="text-muted mb-0">Reporte un problema en su comunidad. Recibirá un número (QUE-...) para dar seguimiento.</p>
+                </div>
+
+                <form asp-action="Queja" method="post" autocomplete="off">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2"></div>
+                    <div class="trampa"><input asp-for="Sitio" tabindex="-1" autocomplete="off" /></div>
+
+                    <partial name="_DatosCiudadano" model="Model" />
+
+                    <h6 class="text-primary">Datos de la queja</h6>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="ServicioId" class="form-label">Tipo de problema</label>
+                            <select asp-for="ServicioId" asp-items="ViewBag.Servicios" class="form-select">
+                                <option value="0">— Seleccione —</option>
+                            </select>
+                            <span asp-validation-for="ServicioId" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Asunto" class="form-label">Título del problema</label>
+                            <input asp-for="Asunto" class="form-control" maxlength="150" placeholder="Ej. Basura sin recoger" />
+                            <span asp-validation-for="Asunto" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-8">
+                            <label asp-for="DireccionIncidente" class="form-label"></label>
+                            <input asp-for="DireccionIncidente" class="form-control" maxlength="250" />
+                            <span asp-validation-for="DireccionIncidente" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="FechaIncidente" class="form-label"></label>
+                            <input asp-for="FechaIncidente" type="date" class="form-control" max="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                            <span asp-validation-for="FechaIncidente" class="text-danger small"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="Descripcion" class="form-label"></label>
+                            <textarea asp-for="Descripcion" id="descripcion" class="form-control" rows="4" maxlength="2000"></textarea>
+                            <div class="d-flex justify-content-between">
+                                <span asp-validation-for="Descripcion" class="text-danger small"></span>
+                                <small class="text-muted"><span id="contador">0</span>/2000 (mínimo 20)</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a asp-action="Index" class="btn btn-light">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">Enviar queja</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <partial name="_ScriptsFormulario" />
+</body>
+</html>

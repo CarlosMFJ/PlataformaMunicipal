@@ -6,10 +6,6 @@ namespace PlataformaMunicipal.Models;
 
 public partial class AppDbContext : DbContext
 {
-    public AppDbContext()
-    {
-    }
-
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
     {
@@ -29,13 +25,13 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Rol> Rols { get; set; }
 
+    public virtual DbSet<Sector> Sectors { get; set; }
+
     public virtual DbSet<ServicioMunicipal> ServicioMunicipals { get; set; }
 
     public virtual DbSet<SolicitudCiudadana> SolicitudCiudadanas { get; set; }
 
     public virtual DbSet<Usuario> Usuarios { get; set; }
-
-    
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -68,6 +64,8 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Activo).HasDefaultValue(true, "DF_Ciudadano_Activo");
             entity.Property(e => e.FechaRegistro).HasDefaultValueSql("(sysdatetime())", "DF_Ciudadano_Fecha");
             entity.Property(e => e.Sexo).IsFixedLength();
+
+            entity.HasOne(d => d.Sector).WithMany(p => p.Ciudadanos).HasConstraintName("FK_Ciudadano_Sector");
         });
 
         modelBuilder.Entity<Departamento>(entity =>
@@ -112,6 +110,12 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.FechaCreacion).HasDefaultValueSql("(sysdatetime())", "DF_Rol_Fecha");
         });
 
+        modelBuilder.Entity<Sector>(entity =>
+        {
+            entity.Property(e => e.Activo).HasDefaultValue(true, "DF_Sector_Activo");
+            entity.Property(e => e.FechaCreacion).HasDefaultValueSql("(sysdatetime())", "DF_Sector_Fecha");
+        });
+
         modelBuilder.Entity<ServicioMunicipal>(entity =>
         {
             entity.Property(e => e.Activo).HasDefaultValue(true, "DF_Servicio_Activo");
@@ -128,6 +132,7 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Canal).HasDefaultValue("Web", "DF_Solicitud_Canal");
             entity.Property(e => e.FechaSolicitud).HasDefaultValueSql("(sysdatetime())", "DF_Solicitud_Fecha");
             entity.Property(e => e.Prioridad).HasDefaultValue((byte)2, "DF_Solicitud_Prioridad");
+            entity.Property(e => e.Tipo).HasDefaultValue("Solicitud", "DF_Solicitud_Tipo");
 
             entity.HasOne(d => d.Ciudadano).WithMany(p => p.SolicitudCiudadanas)
                 .OnDelete(DeleteBehavior.ClientSetNull)

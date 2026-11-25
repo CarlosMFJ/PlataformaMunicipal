@@ -1,0 +1,53 @@
+﻿@model PlataformaMunicipal.Models.Rol
+
+<form asp-action="@(Model.RolId == 0 ? "Crear" : "Editar")" method="post">
+    <div class="modal-header">
+        <h5 class="modal-title">@(Model.RolId == 0 ? "Nuevo rol" : "Editar rol")</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    </div>
+    <div class="modal-body">
+        <input type="hidden" asp-for="RolId" />
+        <input type="hidden" asp-for="FechaCreacion" />
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2"></div>
+
+        <div class="row g-3">
+            <div class="col-md-8">
+                <label asp-for="Nombre" class="form-label">Nombre</label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger small"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="NivelAcceso" class="form-label">Nivel (1 a 5)</label>
+                <input asp-for="NivelAcceso" type="number" min="1" max="5" class="form-control" />
+                <span asp-validation-for="NivelAcceso" class="text-danger small"></span>
+            </div>
+            <div class="col-12">
+                <label asp-for="Descripcion" class="form-label">Descripción</label>
+                <textarea asp-for="Descripcion" class="form-control" rows="2"></textarea>
+                <span asp-validation-for="Descripcion" class="text-danger small"></span>
+            </div>
+            <div class="col-md-4">
+                <div class="form-check">
+                    <input asp-for="PuedeAprobar" class="form-check-input" />
+                    <label asp-for="PuedeAprobar" class="form-check-label">Puede aprobar</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-check">
+                    <input asp-for="PuedeAsignar" class="form-check-input" />
+                    <label asp-for="PuedeAsignar" class="form-check-label">Puede asignar</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-check">
+                    <input asp-for="Activo" class="form-check-input" />
+                    <label asp-for="Activo" class="form-check-label">Activo</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </div>
+</form>

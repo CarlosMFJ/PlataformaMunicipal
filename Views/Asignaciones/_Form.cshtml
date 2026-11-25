@@ -1,0 +1,77 @@
+﻿@model PlataformaMunicipal.Models.AsignacionSolicitud
+@{
+    var esNueva = Model.AsignacionId == 0;
+}
+
+<form asp-action="@(esNueva ? "Crear" : "Editar")" method="post">
+    <div class="modal-header">
+        <h5 class="modal-title">@(esNueva ? "Nueva asignación" : "Editar asignación")</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    </div>
+    <div class="modal-body">
+        <input type="hidden" asp-for="AsignacionId" />
+        <input type="hidden" asp-for="FechaAsignacion" />
+        <input type="hidden" asp-for="AsignadoPorUsuarioId" />
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2"></div>
+
+        <div class="row g-3">
+            <div class="col-12">
+                <label asp-for="SolicitudId" class="form-label">Solicitud</label>
+                @if (esNueva)
+                {
+                    <select asp-for="SolicitudId" asp-items="ViewBag.Solicitudes" class="form-select">
+                        <option value="">— Seleccione —</option>
+                    </select>
+                }
+                else
+                {
+                    <select asp-items="ViewBag.Solicitudes" class="form-select" disabled></select>
+                    <input type="hidden" asp-for="SolicitudId" />
+                }
+                <span asp-validation-for="SolicitudId" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="DepartamentoId" class="form-label">Departamento</label>
+                <select asp-for="DepartamentoId" asp-items="ViewBag.Departamentos" class="form-select">
+                    <option value="">— Seleccione —</option>
+                </select>
+                <span asp-validation-for="DepartamentoId" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="EmpleadoId" class="form-label">Empleado (opcional)</label>
+                <select asp-for="EmpleadoId" asp-items="ViewBag.Empleados" class="form-select">
+                    <option value="">— Sin asignar —</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="FechaLimite" class="form-label">Fecha límite</label>
+                <input asp-for="FechaLimite" type="datetime-local" class="form-control" />
+            </div>
+            <div class="col-md-6">
+                <label asp-for="FechaCompletado" class="form-label">Fecha completado</label>
+                <input asp-for="FechaCompletado" type="datetime-local" class="form-control" />
+            </div>
+            <div class="col-12">
+                <label asp-for="Comentario" class="form-label">Comentario</label>
+                <textarea asp-for="Comentario" class="form-control" rows="2" maxlength="500"></textarea>
+            </div>
+            @if (esNueva)
+            {
+                <div class="col-12">
+                    <div class="form-check">
+                        <input asp-for="EsActual" class="form-check-input" />
+                        <label asp-for="EsActual" class="form-check-label">Asignación vigente</label>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <input type="hidden" asp-for="EsActual" />
+            }
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </div>
+</form>

@@ -1,0 +1,127 @@
+﻿@model IEnumerable<PlataformaMunicipal.Models.ServicioMunicipal>
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ayuntamiento - Servicios ciudadanos</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <style>
+        body {
+            background: #F4F7FA;
+            color: #2B2B2B;
+        }
+
+        .nav-top {
+            background: #2C5F7C;
+        }
+
+        .hero {
+            background: linear-gradient(135deg,#2C5F7C,#3E7E9E);
+            color: #fff;
+            padding: 4rem 0;
+        }
+
+        .btn-acceso {
+            background: #fff;
+            color: #2C5F7C;
+            font-weight: 600;
+        }
+
+            .btn-acceso:hover {
+                background: #E9EFF4;
+                color: #244d65;
+            }
+
+        .card {
+            border: 1px solid #DDE4EA;
+            border-radius: 10px;
+        }
+
+        .btn-primary {
+            background: #2C5F7C;
+            border-color: #2C5F7C;
+        }
+
+            .btn-primary:hover {
+                background: #244d65;
+                border-color: #244d65;
+            }
+    </style>
+</head>
+<body>
+    <nav class="nav-top navbar navbar-dark">
+        <div class="container">
+            <span class="navbar-brand"><i class="bi bi-building"></i> Ayuntamiento</span>
+            <a asp-controller="Account" asp-action="Login" class="btn btn-acceso btn-sm">
+                <i class="bi bi-box-arrow-in-right"></i> Acceso personal municipal
+            </a>
+        </div>
+    </nav>
+
+    <section class="hero text-center">
+        <div class="container">
+            <h1 class="fw-bold">Servicios ciudadanos</h1>
+            <p class="lead">Conozca nuestros servicios y consulte el estado de su solicitud.</p>
+            <a asp-action="Queja" class="btn btn-acceso btn-lg me-2">
+                <i class="bi bi-exclamation-triangle"></i> Presentar una queja
+            </a>
+            <a asp-action="Solicitud" class="btn btn-acceso btn-lg">
+                <i class="bi bi-file-earmark-text"></i> Solicitar un servicio
+            </a>
+        </div>
+    </section>
+
+    <div class="container py-5">
+        <!-- Consulta de seguimiento -->
+        <div class="card mb-5">
+            <div class="card-body p-4">
+                <h4 class="mb-3"><i class="bi bi-search"></i> Consultar mi solicitud</h4>
+                <form asp-action="Consultar" method="post" class="row g-3">
+                    <div class="col-md-5">
+                        <input name="numero" class="form-control" placeholder="Número (ej. SOL-2026-000001)" required />
+                    </div>
+                    <div class="col-md-5">
+                        <input name="cedula" class="form-control" placeholder="Su cédula" required />
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary w-100">Consultar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Servicios -->
+        <h4 class="mb-3">Nuestros servicios</h4>
+        <div class="row g-3">
+            @foreach (var s in Model)
+            {
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h6 class="text-primary">@s.Departamento?.Nombre</h6>
+                            <h5>@s.Nombre</h5>
+                            <p class="text-muted small">@s.Descripcion</p>
+                            <div class="small">
+                                <i class="bi bi-cash"></i> @(s.Costo == 0 ? "Gratuito" : "RD$ " + s.Costo.ToString("N2"))
+                                &nbsp; <i class="bi bi-clock"></i> @s.TiempoEstimadoDias días
+                            </div>
+                            <a asp-action="Solicitud" asp-route-servicioId="@s.ServicioId" class="btn btn-sm btn-outline-primary mt-3">
+                                Solicitar este servicio
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <footer class="text-center text-muted small py-4">
+        Ayuntamiento Municipal · Plataforma de servicios ciudadanos
+    </footer>
+</body>
+</html>

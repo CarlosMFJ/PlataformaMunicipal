@@ -1,0 +1,77 @@
+﻿@model IEnumerable<PlataformaMunicipal.Models.Notificacion>
+@{
+    ViewData["Title"] = "Notificaciones";
+    var puedeGestionar = User.IsInRole("Administrador") || User.IsInRole("Director") || User.IsInRole("Jefe de Departamento");
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0">Notificaciones</h4>
+    @if (puedeGestionar)
+    {
+        <button class="btn btn-primary btn-modal" data-url="@Url.Action("Crear")">
+            <i class="bi bi-plus-lg"></i> Nueva
+        </button>
+    }
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <table id="tabla" class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Título</th>
+                    <th>Mensaje</th>
+                    <th>Tipo</th>
+                    <th>Solicitud</th>
+                    <th>Estado</th>
+                    <th class="text-end">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var n in Model)
+                {
+                    <tr class="@(n.Leida ? "" : "fw-semibold")">
+                        <td data-order="@n.FechaEnvio.ToString("yyyyMMddHHmm")">@n.FechaEnvio.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@n.Titulo</td>
+                        <td>@n.Mensaje</td>
+                        <td><span class="badge bg-info text-dark">@n.Tipo</span></td>
+                        <td>@n.Solicitud?.NumeroSolicitud</td>
+                        <td>
+                            @if (n.Leida)
+                            {
+                                <span class="badge bg-secondary">Leída</span>
+                            }
+                            else
+                            {
+
+                                <span class="badge bg-primary">Nueva</span>
+                            }
+                        </td>
+                        <td class="text-end">
+                            @if (!n.Leida)
+                            {
+                                <button class="btn btn-sm btn-outline-success btn-eliminar" title="Marcar como leída"
+                                        data-url="@Url.Action("MarcarLeida", new { id = n.NotificacionId })"
+                                        data-sinconfirmar="1">
+                                    <i class="bi bi-check2"></i>
+                                </button>
+                            }
+                            @if (puedeGestionar)
+                            {
+                                <button class="btn btn-sm btn-outline-danger btn-eliminar"
+                                        data-url="@Url.Action("Eliminar", new { id = n.NotificacionId })">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_DataTablesScripts" />
+}

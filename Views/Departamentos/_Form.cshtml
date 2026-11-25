@@ -1,0 +1,61 @@
+﻿@model PlataformaMunicipal.Models.Departamento
+
+<form asp-action="@(Model.DepartamentoId == 0 ? "Crear" : "Editar")" method="post">
+    <div class="modal-header">
+        <h5 class="modal-title">@(Model.DepartamentoId == 0 ? "Nuevo departamento" : "Editar departamento")</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    </div>
+    <div class="modal-body">
+        <input type="hidden" asp-for="DepartamentoId" />
+        <input type="hidden" asp-for="FechaCreacion" />
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2"></div>
+
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label asp-for="Codigo" class="form-label">Código</label>
+                <input asp-for="Codigo" class="form-control" />
+                <span asp-validation-for="Codigo" class="text-danger small"></span>
+            </div>
+            <div class="col-md-8">
+                <label asp-for="Nombre" class="form-label">Nombre</label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger small"></span>
+            </div>
+            <div class="col-12">
+                <label asp-for="Descripcion" class="form-label">Descripción</label>
+                <textarea asp-for="Descripcion" class="form-control" rows="2"></textarea>
+                <span asp-validation-for="Descripcion" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Telefono" class="form-label">Teléfono</label>
+                <input asp-for="Telefono" class="form-control" />
+                <span asp-validation-for="Telefono" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Correo" class="form-label">Correo</label>
+                <input asp-for="Correo" class="form-control" />
+                <span asp-validation-for="Correo" class="text-danger small"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Ubicacion" class="form-label">Ubicación</label>
+                <input asp-for="Ubicacion" class="form-control" />
+            </div>
+            <div class="col-md-6">
+                <label asp-for="JefeEmpleadoId" class="form-label">Jefe del departamento</label>
+                <select asp-for="JefeEmpleadoId" asp-items="ViewBag.Jefes" class="form-select">
+                    <option value="">— Sin asignar —</option>
+                </select>
+            </div>
+            <div class="col-12">
+                <div class="form-check">
+                    <input asp-for="Activo" class="form-check-input" />
+                    <label asp-for="Activo" class="form-check-label">Activo</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </div>
+</form>

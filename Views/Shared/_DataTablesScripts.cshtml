@@ -1,0 +1,17 @@
+﻿<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/datatables.net-bs5@1.13.8/css/dataTables.bootstrap5.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/datatables.net@1.13.8/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/datatables.net-bs5@1.13.8/js/dataTables.bootstrap5.min.js"></script>
+<script>
+    $(function () {
+        $('#tabla').DataTable({
+            language: {
+                search: 'Buscar:',
+                lengthMenu: 'Mostrar _MENU_ registros',
+                info: 'Mostrando _START_ a _END_ de _TOTAL_',
+                infoEmpty: 'Sin registros',
+                zeroRecords: 'No se encontraron resultados',
+                paginate: { previous: 'Anterior', next: 'Siguiente' }
+            }
+        });
+    });
+</script>

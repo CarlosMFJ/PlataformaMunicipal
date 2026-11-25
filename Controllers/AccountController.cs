@@ -29,14 +29,21 @@ namespace PlataformaMunicipal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel vm)
         {
-            if (!ModelState.IsValid) return View(vm);
+            if (!ModelState.IsValid)
+            {
+                vm.Contrasena = null;
+                ModelState.Remove("Contrasena");
+                return View(vm);
+            }
 
             var u = await _db.Usuarios.Include(x => x.Rol)
-                .FirstOrDefaultAsync(x => x.NombreUsuario == vm.Usuario && x.Activo);
+      .FirstOrDefaultAsync(x => x.NombreUsuario == vm.Usuario && x.Activo && x.EmpleadoId != null);
 
             if (u != null && u.Bloqueado)
             {
                 ModelState.AddModelError("", "Cuenta bloqueada. Contacte al administrador.");
+                vm.Contrasena = null;
+                ModelState.Remove("Contrasena");
                 return View(vm);
             }
 
@@ -49,6 +56,8 @@ namespace PlataformaMunicipal.Controllers
                     await _db.SaveChangesAsync();
                 }
                 ModelState.AddModelError("", "Usuario o contraseña incorrectos");
+                vm.Contrasena = null;
+                ModelState.Remove("Contrasena");
                 return View(vm);
             }
 
@@ -57,11 +66,11 @@ namespace PlataformaMunicipal.Controllers
             await _db.SaveChangesAsync();
 
             var claims = new List<Claim>
-            {
-                new(ClaimTypes.NameIdentifier, u.UsuarioId.ToString()),
-                new(ClaimTypes.Name, u.NombreUsuario),
-                new(ClaimTypes.Role, u.Rol.Nombre)
-            };
+    {
+        new(ClaimTypes.NameIdentifier, u.UsuarioId.ToString()),
+        new(ClaimTypes.Name, u.NombreUsuario),
+        new(ClaimTypes.Role, u.Rol.Nombre)
+    };
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme)));
@@ -69,10 +78,12 @@ namespace PlataformaMunicipal.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Login");
+            return RedirectToAction("Index", "Publico");
         }
 
         [AllowAnonymous]
